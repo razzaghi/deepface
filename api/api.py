@@ -402,9 +402,9 @@ def findWrapper(req, trx_id=0):
 
     if "model_name" in list(req.keys()):
         model_name = req["model_name"]
-
+        print(req["model_name"])
     print("====================== model name")
-    print(req["model_name"])
+    print(req)
     print(model_name)
     print("====================== /model name")
 
