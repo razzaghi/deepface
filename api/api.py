@@ -3,18 +3,17 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import os
+import PIL.Image as Image
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # ------------------------------
 
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request
 
 import argparse
 import uuid
-import json
 import time
-from tqdm import tqdm
 
 # ------------------------------
 
@@ -292,8 +291,8 @@ def representWrapper(req, trx_id=0):
     return resp_obj
 
 
-@app.route('/represent', methods=['POST'])
-def find():
+@app.route('/upload', methods=['POST'])
+def upload():
     global graph
 
     tic = time.time()
@@ -302,13 +301,7 @@ def find():
 
     resp_obj = jsonify({'success': False})
 
-    if tf_version == 1:
-        with graph.as_default():
-            resp_obj = representWrapper(req, trx_id)
-    elif tf_version == 2:
-        resp_obj = representWrapper(req, trx_id)
-
-    # --------------------------
+    resp_obj = uploadWrapper(req, trx_id)
 
     toc = time.time()
 
@@ -316,6 +309,54 @@ def find():
     resp_obj["seconds"] = toc - tic
 
     return resp_obj, 200
+
+
+def uploadWrapper(req, trx_id=0):
+    resp_obj = jsonify({'success': False})
+
+    image_name = str(uuid.uuid4()) + "jpg"
+    if "image_name" in list(req.keys()):
+        image_name = req["image_name"]
+
+    # -------------------------------------
+    # retrieve images from request
+
+    img = ""
+    if "img" in list(req.keys()):
+        img = req["img"]  # list
+    # print("img: ", img)
+
+    validate_img = False
+    if len(img) > 11 and img[0:11] == "data:image/":
+        validate_img = True
+
+    if validate_img != True:
+        print("invalid image passed!")
+        return jsonify({'success': False, 'error': 'you must pass img as base64 encoded string'}), 205
+
+    # -------------------------------------
+    # call represent function from the interface
+
+    if not os.path.exists("faces"):
+        os.mkdir("faces")
+
+    try:
+        img = Image.open(img)
+        img = img.convert('RGB')
+        img.save(f'faces/{image_name}', "JPEG")
+
+    except Exception as err:
+        print("Exception: ", str(err))
+        resp_obj = jsonify({'success': False, 'error': str(err)}), 205
+
+    # -------------------------------------
+
+    # print("embedding is ", len(embedding)," dimensional vector")
+    resp_obj = jsonify({'success': True, 'message': "OK"}), 200
+
+    # -------------------------------------
+
+    return resp_obj
 
 
 @app.route('/find', methods=['POST'])
