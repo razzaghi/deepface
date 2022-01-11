@@ -1,5 +1,4 @@
 import base64
-import json
 import re
 import warnings
 from io import BytesIO
@@ -404,6 +403,11 @@ def findWrapper(req, trx_id=0):
     if "model_name" in list(req.keys()):
         model_name = req["model_name"]
 
+    print("====================== model name")
+    print(req["model_name"])
+    print(model_name)
+    print("====================== /model name")
+
     if "detector_backend" in list(req.keys()):
         detector_backend = req["detector_backend"]
 
@@ -413,6 +417,7 @@ def findWrapper(req, trx_id=0):
     img = ""
     if "img" in list(req.keys()):
         img = req["img"]  # list
+
     # print("img: ", img)
 
     validate_img = False
