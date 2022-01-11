@@ -1,5 +1,8 @@
+import base64
 import json
+import re
 import warnings
+from io import BytesIO
 
 warnings.filterwarnings("ignore")
 
@@ -297,7 +300,7 @@ def upload():
     global graph
 
     tic = time.time()
-    req = request.get_json()
+    req = request.get_json(force=True)
 
     # req = json. request.get_json()
     trx_id = uuid.uuid4()
@@ -306,8 +309,8 @@ def upload():
 
     toc = time.time()
 
-    resp_obj["trx_id"] = trx_id
-    resp_obj["seconds"] = toc - tic
+    # resp_obj["trx_id"] = trx_id
+    # resp_obj["seconds"] = toc - tic
 
     return resp_obj, 200
 
@@ -315,7 +318,7 @@ def upload():
 def uploadWrapper(req, trx_id=0):
     resp_obj = jsonify({'success': False})
 
-    image_name = str(uuid.uuid4()) + "jpg"
+    image_name = str(uuid.uuid4()) + ".jpg"
     if "image_name" in list(req.keys()):
         image_name = req["image_name"]
 
@@ -325,14 +328,15 @@ def uploadWrapper(req, trx_id=0):
     img = ""
     if "img" in list(req.keys()):
         img = req["img"]  # list
+
     # print("img: ", img)
+    # print("img: ", req["img"][0])
 
     validate_img = False
     if len(img) > 11 and img[0:11] == "data:image/":
         validate_img = True
 
     if validate_img != True:
-        print("invalid image passed!")
         return jsonify({'success': False, 'error': 'you must pass img as base64 encoded string'}), 205
 
     # -------------------------------------
@@ -342,9 +346,10 @@ def uploadWrapper(req, trx_id=0):
         os.mkdir("faces")
 
     try:
-        img = Image.open(img)
-        img = img.convert('RGB')
-        img.save(f'faces/{image_name}', "JPEG")
+        image_data = re.sub('^data:image/.+;base64,', '', img)
+        img_file = Image.open(BytesIO(base64.b64decode(image_data)))
+        img_file = img_file.convert('RGB')
+        img_file.save(f'faces/{image_name}', "JPEG")
 
     except Exception as err:
         print("Exception: ", str(err))
@@ -353,7 +358,7 @@ def uploadWrapper(req, trx_id=0):
     # -------------------------------------
 
     # print("embedding is ", len(embedding)," dimensional vector")
-    resp_obj = jsonify({'success': True, 'message': "OK"}), 200
+    resp_obj = {'success': True, 'message': "OK"}
 
     # -------------------------------------
 
