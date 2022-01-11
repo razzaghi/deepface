@@ -435,6 +435,7 @@ def findWrapper(req, trx_id=0):
             , detector_backend=detector_backend
         )
 
+
     except Exception as err:
         print("Exception: ", str(err))
         resp_obj = jsonify({'success': False, 'error': str(err)}), 205
@@ -443,7 +444,7 @@ def findWrapper(req, trx_id=0):
 
     # print("embedding is ", len(embedding)," dimensional vector")
     resp_obj = {}
-    resp_obj["embedding"] = embedding
+    resp_obj["embedding"] = embedding.to_json()
 
     # -------------------------------------
 
