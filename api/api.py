@@ -346,10 +346,12 @@ def uploadWrapper(req, trx_id=0):
         os.mkdir("faces")
 
     try:
+        print("========================= start")
         image_data = re.sub('^data:image/.+;base64,', '', img)
         img_file = Image.open(BytesIO(base64.b64decode(image_data)))
         img_file = img_file.convert('RGB')
         img_file.save(f'faces/{image_name}', "JPEG")
+        print("========================= end")
 
     except Exception as err:
         print("Exception: ", str(err))
