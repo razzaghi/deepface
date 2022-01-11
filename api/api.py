@@ -293,13 +293,18 @@ def representWrapper(req, trx_id=0):
 
 @app.route('/upload', methods=['POST'])
 def upload():
+
     global graph
 
     tic = time.time()
     req = request.get_json()
     trx_id = uuid.uuid4()
 
+
+
     resp_obj = jsonify({'success': False})
+
+    print(req)
 
     resp_obj = uploadWrapper(req, trx_id)
 
