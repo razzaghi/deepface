@@ -347,6 +347,7 @@ def uploadWrapper(req, trx_id=0):
 
     try:
         print("========================= start")
+        print(image_name)
         image_data = re.sub('^data:image/.+;base64,', '', img)
         img_file = Image.open(BytesIO(base64.b64decode(image_data)))
         img_file = img_file.convert('RGB')
