@@ -435,15 +435,17 @@ def findWrapper(req, trx_id=0):
             , detector_backend=detector_backend
         )
 
-        print("==================================")
-        print(embedding)
-        print(embedding["identity"])
-        print(embedding["identity"][0])
-        print("==================================")
+        # print("==================================")
+        # print(embedding)
+        # print(embedding["identity"])
+        # print(embedding["identity"][0])
+        # print("==================================")
         if embedding["identity"]:
+            print("====================== YES")
             resp_obj["success"] =True
             resp_obj["file_slug"] =embedding["identity"][0]
         else:
+            print("====================== NO")
             resp_obj["success"] = False
             resp_obj["file_slug"] = None
     except Exception as err:
