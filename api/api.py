@@ -425,6 +425,7 @@ def findWrapper(req, trx_id=0):
 
     # -------------------------------------
     # call represent function from the interface
+    resp_obj = {}
 
     try:
         embedding = DeepFace.find(
@@ -434,16 +435,21 @@ def findWrapper(req, trx_id=0):
             , detector_backend=detector_backend
         )
 
+        if embedding["identity"]:
+            resp_obj["success"] =True
+            resp_obj["file_slug"] =embedding["identity"][0]
+        else:
+            resp_obj["success"] = False
+            resp_obj["file_slug"] = None
     except Exception as err:
-        resp_obj = {}
-        resp_obj["embedding"] = jsonify({"identity": {}})
-        return resp_obj
+        resp_obj["success"] = False
+        resp_obj["file_slug"] = ""
 
     # -------------------------------------
 
     # print("embedding is ", len(embedding)," dimensional vector")
-    resp_obj = {}
-    resp_obj["embedding"] = embedding.to_json()
+    # resp_obj = {}
+    # resp_obj["embedding"] = embedding.to_json()
 
     # -------------------------------------
 
