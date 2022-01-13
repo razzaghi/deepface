@@ -1,5 +1,4 @@
 import base64
-import json
 
 import requests
 
@@ -8,19 +7,27 @@ import requests
 # df = DeepFace.find(img_path="sample1.jpg", db_path="./faces", enforce_detection=True)
 # df = DeepFace.find(img_path="sample1.jpg", db_path="./faces", enforce_detection=True)
 
-encodedImage = "data:image/jpeg;base64,"+base64.b64encode(open("sample1.jpg", "rb").read()).decode("UTF-8")
+upload_file_name = "not-related.jpg"
+search_file_name = "notfound.jpg"
+
+uploadImage = "data:image/jpeg;base64," + base64.b64encode(open(upload_file_name, "rb").read()).decode("UTF-8")
+findImage = "data:image/jpeg;base64," + base64.b64encode(open(search_file_name, "rb").read()).decode("UTF-8")
 
 # Setup separate json data
 # POST!
 # url = "http://52.90.60.140:5000/upload"
-upload_url = "http://192.168.1.104:5000/upload"
-find_url = "http://192.168.1.104:5000/find"
-headers = {'content-type': 'application/json'}
+# base_address = "http://192.168.1.104:5000"
+base_address = "http://52.90.60.140:5000"
+upload_url = base_address + "/upload"
+find_url = base_address + "/find"
+headers = {'content-typ e': 'application/json'}
 
 # Setup separate json data
-upload_payload = {"image_name": "sample1.jpg", "img": encodedImage}
-find_payload = {"img": encodedImage}
+upload_payload = {"image_name": upload_file_name, "img": uploadImage}
+find_payload = {"img": findImage}
 
-response = requests.post(url, json=payload,)
+# response = requests.post(upload_url, json=upload_payload, )
+response = requests.post(find_url, json=find_payload, )
 
-# print(response.text)
+with open("response.json", "w") as outfile:
+    outfile.write(response.text)
