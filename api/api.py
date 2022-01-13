@@ -402,11 +402,6 @@ def findWrapper(req, trx_id=0):
 
     if "model_name" in list(req.keys()):
         model_name = req["model_name"]
-        print(req["model_name"])
-    print("====================== model name")
-    print(req)
-    print(model_name)
-    print("====================== /model name")
 
     if "detector_backend" in list(req.keys()):
         detector_backend = req["detector_backend"]
@@ -432,7 +427,6 @@ def findWrapper(req, trx_id=0):
     # call represent function from the interface
 
     try:
-        print("========================= Start to find ======================")
         embedding = DeepFace.find(
             img_path=img
             , db_path="./faces"
@@ -442,8 +436,7 @@ def findWrapper(req, trx_id=0):
 
 
     except Exception as err:
-        print("Exception: ", str(err))
-        resp_obj = jsonify({'success': False, 'error': str(err)}), 205
+        return jsonify({"embedding": {"identity": {}}, 'success': False, 'error': str(err)}), 205
 
     # -------------------------------------
 
