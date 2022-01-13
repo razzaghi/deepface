@@ -434,9 +434,10 @@ def findWrapper(req, trx_id=0):
             , detector_backend=detector_backend
         )
 
-
     except Exception as err:
-        return jsonify({"embedding": {"identity": {}}, 'success': False, 'error': str(err)}), 205
+        resp_obj = {}
+        resp_obj["embedding"] = {"identity": {}}
+        return resp_obj
 
     # -------------------------------------
 
