@@ -437,7 +437,7 @@ def findWrapper(req, trx_id=0):
 
         print("==================================")
         # print(embedding)
-        print(embedding["identity"])
+        print(len(embedding["identity"]))
         # print(embedding["identity"][0])
         print("==================================")
         if embedding["identity"]:
