@@ -3,6 +3,8 @@ import re
 import warnings
 from io import BytesIO
 
+from flask_cors import CORS
+
 from robot.db import db_init, db_select, db_insert
 from utils.utils import get_image_slug
 
@@ -41,6 +43,7 @@ from deepface import DeepFace
 # ------------------------------
 
 app = Flask(__name__)
+CORS(app)
 
 # ------------------------------
 
@@ -48,6 +51,7 @@ if tf_version == 1:
     graph = tf.get_default_graph()
 
 db_init()
+
 
 # ------------------------------
 # Service API Interface
@@ -396,7 +400,6 @@ def find():
 
 
 def findWrapper(req):
-
     # -------------------------------------
     # find out model
 
@@ -427,7 +430,6 @@ def findWrapper(req):
         print("invalid image passed!")
         return None
         # return jsonify({'success': False, 'error': 'you must pass img as base64 encoded string'}), 205
-
 
     result = None
     try:
