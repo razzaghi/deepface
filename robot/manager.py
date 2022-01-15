@@ -7,7 +7,7 @@ import requests
 from robot.db import db_insert, db_select
 
 # select_file = "images/notfound.jpg"
-select_file = "images/not-related.jpg"
+select_file = "images/large3.jpg"
 base_address = "http://52.90.60.140:5000"
 upload_url = base_address + "/upload"
 headers = {'content-typ e': 'application/json'}

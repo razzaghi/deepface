@@ -3,6 +3,9 @@ import re
 import warnings
 from io import BytesIO
 
+from robot.db import db_init, db_select, db_insert
+from utils.utils import get_image_slug
+
 warnings.filterwarnings("ignore")
 
 import os
@@ -44,6 +47,7 @@ app = Flask(__name__)
 if tf_version == 1:
     graph = tf.get_default_graph()
 
+db_init()
 
 # ------------------------------
 # Service API Interface
@@ -317,9 +321,11 @@ def upload():
 def uploadWrapper(req, trx_id=0):
     resp_obj = jsonify({'success': False})
 
-    image_name = str(uuid.uuid4()) + ".jpg"
-    if "image_name" in list(req.keys()):
-        image_name = req["image_name"]
+    slug = str(uuid.uuid1())
+    image_name = slug + ".jpg"
+    person_name = ""
+    if "person_name" in list(req.keys()):
+        person_name = req["person_name"]
 
     # -------------------------------------
     # retrieve images from request
@@ -349,6 +355,7 @@ def uploadWrapper(req, trx_id=0):
         img_file = Image.open(BytesIO(base64.b64decode(image_data)))
         img_file = img_file.convert('RGB')
         img_file.save(f'faces/{image_name}', "JPEG")
+        record = db_insert(slug=slug, name=person_name)
 
     except Exception as err:
         print("Exception: ", str(err))
@@ -372,26 +379,23 @@ def find():
     req = request.get_json()
     trx_id = uuid.uuid4()
 
-    resp_obj = jsonify({'success': False})
-
+    wrapper_response = None
+    resp_obj = {}
     if tf_version == 1:
         with graph.as_default():
-            resp_obj = findWrapper(req, trx_id)
+            wrapper_response = findWrapper(req)
     elif tf_version == 2:
-        resp_obj = findWrapper(req, trx_id)
+        wrapper_response = findWrapper(req)
 
-    # --------------------------
-
-    toc = time.time()
-
-    resp_obj["trx_id"] = trx_id
-    resp_obj["seconds"] = toc - tic
+    if wrapper_response:
+        slug = get_image_slug(wrapper_response)
+        person_name = db_select(slug=slug)[0]
+        resp_obj['name'] = person_name
 
     return resp_obj, 200
 
 
-def findWrapper(req, trx_id=0):
-    resp_obj = jsonify({'success': False})
+def findWrapper(req):
 
     # -------------------------------------
     # find out model
@@ -421,12 +425,11 @@ def findWrapper(req, trx_id=0):
 
     if validate_img != True:
         print("invalid image passed!")
-        return jsonify({'success': False, 'error': 'you must pass img as base64 encoded string'}), 205
+        return None
+        # return jsonify({'success': False, 'error': 'you must pass img as base64 encoded string'}), 205
 
-    # -------------------------------------
-    # call represent function from the interface
-    resp_obj = {}
 
+    result = None
     try:
         embedding = DeepFace.find(
             img_path=img
@@ -436,14 +439,17 @@ def findWrapper(req, trx_id=0):
         )
 
         if len(embedding["identity"]) > 0:
-            resp_obj["success"] = True
-            resp_obj["file_slug"] = embedding["identity"][0]
+            result = embedding["identity"][0]
+            # resp_obj["success"] = True
+            # resp_obj["file_slug"] = embedding["identity"][0]
         else:
-            resp_obj["success"] = False
-            resp_obj["file_slug"] = None
+            result = None
+            # resp_obj["success"] = False
+            # resp_obj["file_slug"] = None
     except Exception as err:
-        resp_obj["success"] = False
-        resp_obj["file_slug"] = None
+        result = None
+        # resp_obj["success"] = False
+        # resp_obj["file_slug"] = None
 
     # -------------------------------------
 
@@ -453,7 +459,7 @@ def findWrapper(req, trx_id=0):
 
     # -------------------------------------
 
-    return resp_obj
+    return result
 
 
 if __name__ == '__main__':
