@@ -394,6 +394,9 @@ def find():
     if wrapper_response:
         slug = get_image_slug(wrapper_response)
         person_name = db_select(slug=slug)
+        print("================")
+        print(person_name)
+        print("================")
         resp_obj['name'] = person_name
 
     return resp_obj, 200
