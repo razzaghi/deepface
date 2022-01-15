@@ -360,6 +360,8 @@ def uploadWrapper(req, trx_id=0):
         img_file = img_file.convert('RGB')
         img_file.save(f'faces/{image_name}', "JPEG")
         record = db_insert(slug=slug, name=person_name)
+        if record:
+            os.remove("faces/representations_vgg_face.pkl")
 
     except Exception as err:
         print("Exception: ", str(err))
@@ -393,13 +395,7 @@ def find():
 
     if wrapper_response:
         slug = get_image_slug(wrapper_response)
-        print("=======================")
-        print(slug)
-        print("=======================")
         person_name = db_select(slug=slug)
-        print("================")
-        print(person_name)
-        print("================")
         resp_obj['name'] = person_name
 
     return resp_obj, 200
