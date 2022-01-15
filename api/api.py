@@ -43,7 +43,7 @@ from deepface import DeepFace
 # ------------------------------
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ------------------------------
 

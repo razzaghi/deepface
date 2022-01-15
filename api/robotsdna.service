@@ -1,0 +1,11 @@
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/workspace/deepface/api
+Environment="PATH=/home/ubuntu/envs/deepface/bin"
+ExecStart=/home/ubuntu/envs/deepface/bin/uwsgi --ini api.ini
+
+[Install]
+WantedBy=multi-user.target
