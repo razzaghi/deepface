@@ -5,7 +5,7 @@ from io import BytesIO
 
 from flask_cors import CORS
 
-from robot.db import db_init, db_select, db_insert
+from db.db import db_init, db_select, db_insert
 from utils.utils import get_image_slug
 
 warnings.filterwarnings("ignore")

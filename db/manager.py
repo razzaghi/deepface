@@ -4,7 +4,7 @@ import uuid
 
 import requests
 
-from robot.db import db_insert, db_select
+from db.db import db_insert, db_select
 
 # select_file = "images/notfound.jpg"
 select_file = "images/large3.jpg"
