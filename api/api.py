@@ -139,7 +139,7 @@ def analyzeWrapper(req, trx_id=0):
 
 def analyze_func(img):
     detector_backend = 'opencv'
-    actions = ['emotion', 'age', 'gender', 'race']
+    actions = ('emotion', 'age', 'gender', 'race',)
 
     instances = []
     instances.append(image)
