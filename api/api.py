@@ -441,7 +441,7 @@ def isFaceWrapper(req):
 
     result = None
     try:
-        face = DeepFace.detectFace(img_path=img, target_size=(400, 300), detector_backend="opencv")
+        face = DeepFace.detectFace(img_path=img, detector_backend="opencv")
         result = True
     except Exception as err:
         result = None
