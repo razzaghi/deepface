@@ -498,6 +498,9 @@ def find():
 
         print("-------------------------")
         print(analyze_result["dominant_emotion"])
+        print(analyze_result["age"])
+        print(analyze_result["gender"])
+        print(analyze_result["dominant_race"])
         person_name = db_select(slug=slug)
         print(person_name)
         print("-------------------------")
