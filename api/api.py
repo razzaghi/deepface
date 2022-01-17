@@ -497,6 +497,7 @@ def find():
         analyze_result = analyze_func(req['img'])
 
         print("-------------------------")
+        print(analyze_result)
         print(analyze_result["dominant_emotion"])
         print(analyze_result["age"])
         print(analyze_result["gender"])
