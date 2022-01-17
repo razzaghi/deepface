@@ -137,7 +137,7 @@ def analyzeWrapper(req, trx_id=0):
     return resp_obj
 
 
-def analyze(img):
+def analyze_func(img):
     detector_backend = 'opencv'
     actions = ['emotion', 'age', 'gender', 'race']
 
@@ -494,7 +494,7 @@ def find():
             resp_obj['name'] = "-1"
             return resp_obj, 200
         slug = get_image_slug(wrapper_response)
-        analyze_result = analyze(req['img'])
+        analyze_result = analyze_func(req['img'])
         print("-------------------------")
         print(analyze_result)
         person_name = db_select(slug=slug)
