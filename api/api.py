@@ -59,12 +59,12 @@ if tf_version == 1:
 
 db_init()
 
-
 # ------------------------------
 # Service API Interface
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FACE_DIR = BASE_DIR+"/faces"
+FACE_DIR = BASE_DIR + "/faces"
+
 
 @app.route('/api/')
 def index():
@@ -135,6 +135,22 @@ def analyzeWrapper(req, trx_id=0):
     # ---------------
     # print(resp_obj)
     return resp_obj
+
+
+def analyze(img):
+    detector_backend = 'opencv'
+    actions = ['emotion', 'age', 'gender', 'race']
+
+    result = None
+    try:
+        result = DeepFace.analyze(img_path=img, actions=actions, detector_backend=detector_backend)
+    except Exception as err:
+        print("Exception: ", str(err))
+        result = None
+
+    # ---------------
+    # print(resp_obj)
+    return result
 
 
 @app.route('/api/verify', methods=['POST'])
@@ -316,7 +332,8 @@ def representWrapper(req, trx_id=0):
 @cross_origin()
 def image():
     args = request.args
-    return send_file(FACE_DIR+"/"+args.get("name"), mimetype='image/gif')
+    return send_file(FACE_DIR + "/" + args.get("name"), mimetype='image/gif')
+
 
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
@@ -378,7 +395,7 @@ def uploadWrapper(req, trx_id=0):
         img_file.save(f'{FACE_DIR}/{image_name}', "JPEG")
         record = db_insert(slug=slug, name=person_name)
         if record:
-            os.remove(FACE_DIR+"/representations_facenet.pkl")
+            os.remove(FACE_DIR + "/representations_facenet.pkl")
 
     except Exception as err:
         print("Exception: ", str(err))
@@ -395,7 +412,6 @@ def uploadWrapper(req, trx_id=0):
 
 
 def isFaceWrapper(req):
-
     model_name = "VGG-Face"
     distance_metric = "cosine"
     detector_backend = 'opencv'
@@ -432,6 +448,7 @@ def isFaceWrapper(req):
         print(err)
 
     return result
+
 
 @app.route('/api/isFace', methods=['POST'])
 @cross_origin()
@@ -477,8 +494,9 @@ def find():
             resp_obj['name'] = "-1"
             return resp_obj, 200
         slug = get_image_slug(wrapper_response)
+        analyze_result = analyze(req['img'])
         print("-------------------------")
-        print(slug)
+        print(analyze_result)
         person_name = db_select(slug=slug)
         print(person_name)
         print("-------------------------")
