@@ -28,7 +28,7 @@ import time
 import tensorflow as tf
 
 tf_version = int(tf.__version__.split(".")[0])
-
+os.environ["CUDA_VISIBLE_DEVICES"]=""
 # ------------------------------
 
 if tf_version == 2:
