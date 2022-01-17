@@ -9,9 +9,6 @@ deepface==0.0.26
 filelock==3.0.12
 Flask==1.1.2
 gast==0.3.3
-gdown==3.11.1
-google-auth==1.17.1
-google-auth-oauthlib==0.4.1
 google-pasta==0.2.0
 grpcio==1.29.0
 h5py==2.10.0
