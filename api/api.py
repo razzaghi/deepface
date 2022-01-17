@@ -359,17 +359,17 @@ def uploadWrapper(req, trx_id=0):
     # -------------------------------------
     # call represent function from the interface
 
-    if not os.path.exists("faces"):
-        os.mkdir("faces")
+    if not os.path.exists("../faces"):
+        os.mkdir("../faces")
 
     try:
         image_data = re.sub('^data:image/.+;base64,', '', img)
         img_file = Image.open(BytesIO(base64.b64decode(image_data)))
         img_file = img_file.convert('RGB')
-        img_file.save(f'faces/{image_name}', "JPEG")
+        img_file.save(f'../faces/{image_name}', "JPEG")
         record = db_insert(slug=slug, name=person_name)
         if record:
-            os.remove("faces/representations_vgg_face.pkl")
+            os.remove("../faces/representations_vgg_face.pkl")
 
     except Exception as err:
         print("Exception: ", str(err))
@@ -446,7 +446,7 @@ def findWrapper(req):
     try:
         embedding = DeepFace.find(
             img_path=img
-            , db_path="./faces"
+            , db_path="../faces"
             , model_name=model_name
             , detector_backend=detector_backend
         )
