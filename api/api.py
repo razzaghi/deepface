@@ -505,6 +505,11 @@ def find():
         print(person_name)
         print("-------------------------")
         resp_obj['name'] = person_name
+        if analyze_result:
+            resp_obj['emotion'] = analyze_result["dominant_emotion"]
+            resp_obj['age'] = analyze_result["age"]
+            resp_obj['gender'] = analyze_result["gender"]
+            resp_obj['race'] = analyze_result["dominant_race"]
 
     return resp_obj, 200
 
