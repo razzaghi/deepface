@@ -426,6 +426,7 @@ def isFaceWrapper(req):
         result = True
     except Exception as err:
         result = None
+        print(err)
         # resp_obj["success"] = False
         # resp_obj["file_slug"] = None
 
