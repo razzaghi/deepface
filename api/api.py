@@ -450,7 +450,11 @@ def findWrapper(req):
             , model_name=model_name
             , detector_backend=detector_backend
         )
+        print("========================")
+        print(len(embedding["identity"]))
+        print("========================")
         if len(embedding["identity"]) > 0:
+
             result = embedding["identity"][0]
             # resp_obj["success"] = True
             # resp_obj["file_slug"] = embedding["identity"][0]
