@@ -63,6 +63,11 @@ db_init()
 # ------------------------------
 # Service API Interface
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print("----------------")
+print(BASE_DIR)
+print("----------------")
+
 @app.route('/api/')
 def index():
     return '<h1>Hello, world!</h1>'
