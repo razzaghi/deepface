@@ -44,6 +44,7 @@ from deepface import DeepFace
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # ------------------------------
 
