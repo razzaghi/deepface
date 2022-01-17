@@ -454,7 +454,7 @@ def findWrapper(req):
         embedding = DeepFace.find(
             img_path=img
             , db_path=FACE_DIR
-            , model_name=model_name
+            , model_name="Facenet"
             , detector_backend=detector_backend
         )
         print("========================")
