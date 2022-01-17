@@ -388,6 +388,71 @@ def uploadWrapper(req, trx_id=0):
     return resp_obj
 
 
+def isFaceWrapper(req):
+
+    model_name = "VGG-Face"
+    distance_metric = "cosine"
+    detector_backend = 'opencv'
+
+    if "model_name" in list(req.keys()):
+        model_name = req["model_name"]
+
+    if "detector_backend" in list(req.keys()):
+        detector_backend = req["detector_backend"]
+
+    # -------------------------------------
+    # retrieve images from request
+
+    img = ""
+    if "img" in list(req.keys()):
+        img = req["img"]  # list
+
+    # print("img: ", img)
+
+    validate_img = False
+    if len(img) > 11 and img[0:11] == "data:image/":
+        validate_img = True
+
+    if validate_img != True:
+        print("invalid image passed!")
+        return None
+
+    result = None
+    try:
+        face = DeepFace.detectFace(img_path=img, target_size=(400, 300), detector_backend="opencv")
+        print("============================== DETECT Face")
+        print(face)
+        print("============================== /DETECT Face")
+        result = True
+    except Exception as err:
+        result = None
+        # resp_obj["success"] = False
+        # resp_obj["file_slug"] = None
+
+    return result
+
+@app.route('/api/isFace', methods=['POST'])
+@cross_origin()
+def isFace():
+    global graph
+
+    req = request.get_json()
+
+    wrapper_response = None
+    resp_obj = {}
+    resp_obj['isFace'] = False
+    if tf_version == 1:
+        with graph.as_default():
+            wrapper_response = isFaceWrapper(req)
+    elif tf_version == 2:
+        wrapper_response = isFaceWrapper(req)
+
+    if wrapper_response:
+        resp_obj['isFace'] = True
+
+    return resp_obj, 200
+
+
 @app.route('/api/find', methods=['POST'])
 @cross_origin()
 def find():
