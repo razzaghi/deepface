@@ -473,6 +473,9 @@ def find():
         wrapper_response = findWrapper(req)
 
     if wrapper_response:
+        if wrapper_response == -1:
+            resp_obj['name'] = "-1"
+            return resp_obj, 200
         slug = get_image_slug(wrapper_response)
         print("-------------------------")
         print(slug)
