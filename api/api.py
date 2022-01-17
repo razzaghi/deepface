@@ -371,8 +371,8 @@ def uploadWrapper(req, trx_id=0):
         img_file = img_file.convert('RGB')
         img_file.save(f'{FACE_DIR}/{image_name}', "JPEG")
         record = db_insert(slug=slug, name=person_name)
-        if record:
-            os.remove(FACE_DIR+"/representations_vgg_face.pkl")
+        # if record:
+        #     os.remove(FACE_DIR+"/representations_vgg_face.pkl")
 
     except Exception as err:
         print("Exception: ", str(err))
