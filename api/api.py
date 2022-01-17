@@ -46,7 +46,7 @@ app = Flask(__name__)
 CORS_ALLOW_ORIGIN = "*,*"
 CORS_EXPOSE_HEADERS = "*,*"
 CORS_ALLOW_HEADERS = "*,*"
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, origins=CORS_ALLOW_ORIGIN.split(","),
+cors = CORS(app, resources={r"/*": {"origins": "*"}}, origins=CORS_ALLOW_ORIGIN.split(","),
             allow_headers=CORS_ALLOW_HEADERS.split(","), expose_headers=CORS_EXPOSE_HEADERS.split(","),
             supports_credentials=True)
 # cors = CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -63,12 +63,12 @@ db_init()
 # ------------------------------
 # Service API Interface
 
-@app.route('/api/')
+@app.route('/')
 def index():
     return '<h1>Hello, world!</h1>'
 
 
-@app.route('/api/analyze', methods=['POST'])
+@app.route('/analyze', methods=['POST'])
 def analyze():
     global graph
 
@@ -134,7 +134,7 @@ def analyzeWrapper(req, trx_id=0):
     return resp_obj
 
 
-@app.route('/api/verify', methods=['POST'])
+@app.route('/verify', methods=['POST'])
 def verify():
     global graph
 
@@ -226,7 +226,7 @@ def verifyWrapper(req, trx_id=0):
     return resp_obj
 
 
-@app.route('/api/represent', methods=['POST'])
+@app.route('/represent', methods=['POST'])
 def represent():
     global graph
 
@@ -309,7 +309,7 @@ def representWrapper(req, trx_id=0):
     return resp_obj
 
 
-@app.route('/api/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 @cross_origin()
 def upload():
     global graph
@@ -385,7 +385,7 @@ def uploadWrapper(req, trx_id=0):
     return resp_obj
 
 
-@app.route('/api/find', methods=['POST'])
+@app.route('/find', methods=['POST'])
 @cross_origin()
 def find():
     global graph
