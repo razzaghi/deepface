@@ -404,7 +404,11 @@ def find():
 
     if wrapper_response:
         slug = get_image_slug(wrapper_response)
+        print("-------------------------")
+        print(slug)
         person_name = db_select(slug=slug)
+        print(person_name)
+        print("-------------------------")
         resp_obj['name'] = person_name
 
     return resp_obj, 200
@@ -457,6 +461,7 @@ def findWrapper(req):
         if len(embedding["identity"]) > 0:
 
             result = embedding["identity"][0]
+            print(embedding["identity"][0])
             # resp_obj["success"] = True
             # resp_obj["file_slug"] = embedding["identity"][0]
         else:
