@@ -452,6 +452,7 @@ def findWrapper(req):
         )
         print("========================")
         print(len(embedding["identity"]))
+        print(embedding["identity"])
         print("========================")
         if len(embedding["identity"]) > 0:
 
