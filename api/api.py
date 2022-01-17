@@ -3,7 +3,7 @@ import re
 import warnings
 from io import BytesIO
 
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 from db.db import db_init, db_select, db_insert
 from utils.utils import get_image_slug
@@ -303,6 +303,7 @@ def representWrapper(req, trx_id=0):
 
 
 @app.route('/upload', methods=['POST'])
+@cross_origin()
 def upload():
     global graph
 
@@ -378,6 +379,7 @@ def uploadWrapper(req, trx_id=0):
 
 
 @app.route('/find', methods=['POST'])
+@cross_origin()
 def find():
     global graph
 
