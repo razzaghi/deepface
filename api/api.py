@@ -141,15 +141,12 @@ def analyze_func(img):
     detector_backend = 'opencv'
     actions = ('emotion', 'age', 'gender', 'race',)
 
-    instances = []
-    instances.append(image)
-
-    result = None
+    result = {}
     try:
-        result = DeepFace.analyze(instances, actions=actions, detector_backend=detector_backend)
+        result = DeepFace.analyze(img_path=img, actions=actions, detector_backend=detector_backend)
     except Exception as err:
         print("Exception: ", str(err))
-        result = None
+        result = {}
 
     # ---------------
     # print(resp_obj)
