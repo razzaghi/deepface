@@ -495,8 +495,9 @@ def find():
             return resp_obj, 200
         slug = get_image_slug(wrapper_response)
         analyze_result = analyze_func(req['img'])
+
         print("-------------------------")
-        print(analyze_result)
+        print(analyze_result["dominant_emotion"])
         person_name = db_select(slug=slug)
         print(person_name)
         print("-------------------------")
