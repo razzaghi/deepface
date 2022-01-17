@@ -487,4 +487,4 @@ if __name__ == '__main__':
         help='Port of serving api')
     args = parser.parse_args()
     # app.run(host='0.0.0.0', port=args.port, ssl_context=('/etc/letsencrypt/live/rec.robotsdna.com/fullchain.pem', '/etc/letsencrypt/live/rec.robotsdna.com/privkey.pem'))
-    app.run(host='0.0.0.0', port=args.port, ssl_context='adhoc')
+    app.run(host='0.0.0.0', port=args.port)
