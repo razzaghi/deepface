@@ -17,7 +17,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # ------------------------------
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 
 import argparse
 import uuid
@@ -312,6 +312,12 @@ def representWrapper(req, trx_id=0):
     return resp_obj
 
 
+@app.route('/api/image/', methods=['GET'])
+@cross_origin()
+def image():
+    args = request.args
+    return send_file(FACE_DIR+"/"+args.get("name"), mimetype='image/gif')
+
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
 def upload():
@@ -420,15 +426,10 @@ def isFaceWrapper(req):
     result = None
     try:
         face = DeepFace.detectFace(img_path=img, target_size=(400, 300), detector_backend="opencv")
-        print("============================== DETECT Face")
-        print(face)
-        print("============================== /DETECT Face")
         result = True
     except Exception as err:
         result = None
         print(err)
-        # resp_obj["success"] = False
-        # resp_obj["file_slug"] = None
 
     return result
 
@@ -506,54 +507,36 @@ def findWrapper(req):
 
     # print("img: ", img)
 
-    validate_img = False
-    if len(img) > 11 and img[0:11] == "data:image/":
-        validate_img = True
-
-    if validate_img != True:
-        print("invalid image passed!")
-        return None
-        # return jsonify({'success': False, 'error': 'you must pass img as base64 encoded string'}), 205
-
-    result = None
-    try:
-        embedding = DeepFace.find(
-            img_path=img
-            , db_path=FACE_DIR
-            , model_name="Facenet"
-            , detector_backend=detector_backend
-        )
-        print("========================")
-        print(len(embedding["identity"]))
-        print(embedding["identity"])
-        print("========================")
-        if len(embedding["identity"]) > 0:
-
-            result = embedding["identity"][0]
-            print(embedding["identity"][0])
-            # resp_obj["success"] = True
-            # resp_obj["file_slug"] = embedding["identity"][0]
-        else:
-            result = None
-            # resp_obj["success"] = False
-            # resp_obj["file_slug"] = None
-    except Exception as err:
-        print("=================")
-        print(err)
-        print("=================")
+    if isFaceWrapper(req):
+        img = req["img"]
         result = None
-        # resp_obj["success"] = False
-        # resp_obj["file_slug"] = None
+        try:
+            embedding = DeepFace.find(
+                img_path=img
+                , db_path=FACE_DIR
+                , model_name="Facenet"
+                , detector_backend=detector_backend
+            )
+            print("========================")
+            print(len(embedding["identity"]))
+            print(embedding["identity"])
+            print("========================")
+            if len(embedding["identity"]) > 0:
 
-    # -------------------------------------
+                result = embedding["identity"][0]
+            else:
+                result = None
+                # resp_obj["success"] = False
+                # resp_obj["file_slug"] = None
+        except Exception as err:
+            print("=================")
+            print(err)
+            print("=================")
+            result = None
 
-    # print("embedding is ", len(embedding)," dimensional vector")
-    # resp_obj = {}
-    # resp_obj["embedding"] = embedding.to_json()
-
-    # -------------------------------------
-
-    return result
+        return result
+    else:
+        return -1
 
 
 if __name__ == '__main__':
