@@ -537,6 +537,9 @@ def findWrapper(req):
             # resp_obj["success"] = False
             # resp_obj["file_slug"] = None
     except Exception as err:
+        print("=================")
+        print(err)
+        print("=================")
         result = None
         # resp_obj["success"] = False
         # resp_obj["file_slug"] = None
