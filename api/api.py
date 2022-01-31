@@ -506,6 +506,7 @@ def find():
         print(person_name)
         print("-------------------------")
         resp_obj['name'] = person_name
+        resp_obj['slug'] = slug
         if analyze_result:
             resp_obj['emotion'] = analyze_result["dominant_emotion"]
             resp_obj['age'] = analyze_result["age"]
